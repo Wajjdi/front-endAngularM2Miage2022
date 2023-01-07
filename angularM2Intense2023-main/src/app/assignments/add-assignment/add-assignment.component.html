@@ -1,0 +1,63 @@
+<form (submit)="onSubmit(); assignmentForm.reset()"
+      ngForm #assignmentForm class="form">
+  <mat-form-field>
+    <mat-label>Nom du devoir à ajouter</mat-label>
+
+    <input matInput [(ngModel)]="nomDevoir"
+           name="nom"
+           >
+  </mat-form-field>
+
+
+  <mat-form-field>
+    <mat-label>Nom de l'auteur</mat-label>
+    <input matInput [(ngModel)]="nomAuteur"
+           name="nom"
+           >
+  </mat-form-field>
+
+  <mat-form-field hintLabel="Note /20" appearance="fill">
+    <mat-label>Enter some input</mat-label>
+    <input matInput #input max="20" [(ngModel)]="note"
+    name="noteSur" >
+   
+  </mat-form-field>
+
+
+  <h4>native html select</h4>
+  <mat-form-field appearance="fill">
+    <mat-label>Choose an option</mat-label>
+    <select matNativeControl [(ngModel)]="nomMatiere" 
+    name="matiere">
+      <option value="" selected></option>
+      <option value="Grails">Grails</option>
+      <option value="BD">BD</option>
+      <option value="Football">Football</option>
+      <option value="Technologie">Technologie</option>
+    </select>
+  </mat-form-field>
+
+
+  
+
+
+  <mat-form-field appearance="fill">
+    <mat-label>Date de rendu</mat-label>
+    <input matInput [matDatepicker]="picker" [(ngModel)]="dateDeRendu" name="date">
+    <mat-hint>MM/DD/YYYY</mat-hint>
+    <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+    <mat-datepicker #picker></mat-datepicker>
+  </mat-form-field>
+
+
+  <mat-form-field class="example-full-width">
+    <mat-label>Remarque</mat-label>
+    <textarea matInput [(ngModel)]="remarque" name="rmq" placeholder="Laissez une remarque"></textarea>
+  </mat-form-field>
+
+
+  <button mat-stroked-button
+           color="primary">
+      Ajouter un devoir
+    </button>
+</form>
