@@ -13,6 +13,12 @@ import { MatListModule } from '@angular/material/list';
 import { MatCardModule } from '@angular/material/card';
 import { MatCheckboxModule } from '@angular/material/checkbox';
 import { MatSlideToggleModule } from '@angular/material/slide-toggle';
+import {MatPaginatorModule} from '@angular/material/paginator';
+import {MatTableModule} from '@angular/material/table';
+import {MatToolbarModule} from '@angular/material/toolbar';
+import { MatSortModule } from '@angular/material/sort';
+import {TextFieldModule} from '@angular/cdk/text-field';
+
 
 import { AppComponent } from './app.component';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
@@ -24,6 +30,8 @@ import { RouterModule } from '@angular/router';
 import { EditAssignmentComponent } from './assignments/edit-assignment/edit-assignment.component';
 import { AuthGuard } from './shared/auth.guard';
 import { HttpClientModule } from '@angular/common/http';
+import { Search } from './assignments/Search';
+import { LoginComponent } from './login/login.component';
 
 const routes: Routes = [
   {
@@ -46,7 +54,13 @@ const routes: Routes = [
     path: 'assignment/:id/edit',
     component: EditAssignmentComponent,
     canActivate:[AuthGuard]
-  }
+  },
+
+  {
+    path: 'login',
+    component: LoginComponent,
+  },
+  
 ]
 
 @NgModule({
@@ -55,7 +69,9 @@ const routes: Routes = [
     AssignmentsComponent,
     AssignmentDetailComponent,
     AddAssignmentComponent,
-    EditAssignmentComponent
+    EditAssignmentComponent,
+    Search,
+    LoginComponent
   ],
   imports: [
     BrowserModule,
@@ -65,7 +81,7 @@ const routes: Routes = [
     MatNativeDateModule, MatListModule, MatCardModule,
     MatCheckboxModule, MatSlideToggleModule,
     RouterModule.forRoot(routes),
-    HttpClientModule
+    HttpClientModule, MatPaginatorModule,MatTableModule,MatToolbarModule,MatSortModule,TextFieldModule
   ],
   providers: [],
   bootstrap: [AppComponent]

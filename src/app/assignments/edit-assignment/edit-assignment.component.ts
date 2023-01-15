@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AssignmentsService } from 'src/app/shared/assignments.service';
 import { Assignment } from '../assignment.model';
+import { AuthService } from '../../shared/auth.service';
+
 
 @Component({
   selector: 'app-edit-assignment',
@@ -13,24 +15,44 @@ export class EditAssignmentComponent implements OnInit {
   // Pour les champs de formulaire
   nomAssignment:string="";
   dateDeRendu!:Date;
+  note!:number;
+  nomMatiere!:string;
+  nomAuteur!:string;
+  remarque!:string;
+
+  etat = true;
+  title = 'Gestion des assignments';
+
 
   constructor(private assignmentsService:AssignmentsService,
               private router:Router,
-              private route:ActivatedRoute) { }
+              private route:ActivatedRoute,private authService:AuthService) { }
 
   ngOnInit(): void {
     // Exemple de récupération de ce qui suit le ? dans l'URL
-    const nom = this.route.snapshot.queryParams['nom'];
-    const age = this.route.snapshot.queryParams['age'];
+
     // fragment (ce qui suit le # dans l'URL)
     const fragment = this.route.snapshot.fragment;
 
-    console.log("nom: " + nom);
-    console.log("age: " + age);
     console.log("fragment: " + fragment);
     console.log(this.route.snapshot.queryParams);
 
     this.getAssignment();
+  }
+
+  login() {
+    console.log()
+    if(!this.authService.loggedIn) {
+      this.authService.logIn();
+      this.authService.isAdmin().then((value:boolean)=>{console.log(value)
+      this.etat = value;
+      })
+    } else {
+      this.authService.logOut();
+      this.authService.isAdmin().then((value:boolean)=>{console.log(value)
+      this.etat = value;
+    })
+    }
   }
 
   getAssignment() {
@@ -44,6 +66,11 @@ export class EditAssignmentComponent implements OnInit {
       this.assignment = assignment;
       this.nomAssignment = assignment.nom;
       this.dateDeRendu = assignment.dateDeRendu;
+      this.note = assignment.note;
+      this.nomMatiere = assignment.nomMatiere;
+      this.nomAuteur = assignment.nomAuteur;
+      this.remarque = assignment.remarque;
+
     });
   }
   onSaveAssignment() {
@@ -53,6 +80,10 @@ export class EditAssignmentComponent implements OnInit {
     // On modifie l'assignment
     this.assignment.nom = this.nomAssignment;
     this.assignment.dateDeRendu = this.dateDeRendu;
+    this.assignment.note = this.note;
+    this.assignment.nomMatiere = this.nomMatiere;
+    this.assignment.nomAuteur = this.nomAuteur;
+    this.assignment.remarque = this.remarque;
     // On envoie l'assignment modifié au service
     // qui va faire la requête HTTP
     // On va naviguer vers la page d'accueil

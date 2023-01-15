@@ -1,23 +1,74 @@
-<mat-card *ngIf="assignmentTransmis">
-  <mat-card-title>{{assignmentTransmis.nom}}</mat-card-title>
-  <mat-card-subtitle>{{assignmentTransmis.dateDeRendu | date}}</mat-card-subtitle>
-  <div id="bottom">
-    <mat-checkbox *ngIf="!assignmentTransmis.rendu" [checked]="assignmentTransmis.rendu" (click)="onAssignmentRendu()">
-      Devoir rendu
-    </mat-checkbox>
 
-    <nav>
-      <a routerLink="/assignment/{{assignmentTransmis.id}}/edit">
-        <button mat-raised-button color="primary">
-          EDIT
-        </button>
-      </a>
-    </nav>
+<mat-toolbar color="primary">
+  <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon" routerLink="/home">
+    <mat-icon>menu</mat-icon>
+  </button>
+  <span routerLink="/home">{{title}}</span>
+  <span class="example-spacer"></span>
+  <button *ngIf="!etat" mat-raised-button color="primary" routerLink="/login">
+    se connecter
+  </button>
+  <button *ngIf="etat" mat-raised-button color="primary" routerLink="/home" (click)="login()">
+    se deconnecter
+  </button>
+</mat-toolbar>
 
-    
 
-    <button mat-raised-button color="warn" (click)="onDeleteAssignment()">
-      DELETE
-    </button>
+<div id="wrapper" *ngIf="assignmentTransmis">
+  <div id="header">
+    <h1> La matière est {{assignmentTransmis.nomMatiere }}</h1>
+    <div id="nav">
+      <ul>
+        <mat-card-subtitle> A ete rendu le {{assignmentTransmis.dateDeRendu | date}}</mat-card-subtitle>
+      </ul>
+    </div>
   </div>
-</mat-card>
+  <div id="content">
+   
+    <div class="article column4">
+      <p>{{assignmentTransmis.nom}}</p>
+    </div>
+    <div class="article column5">
+      <img src="{{assignmentTransmis.imgMatiere}}" alt="" srcset="">
+    </div>
+   
+  </div>
+  <div id="content">
+   
+    <div class="article column1">
+      <p>La note est {{assignmentTransmis.note }}</p>
+    </div>
+    <div class="article column2">
+      <p>Depose par {{assignmentTransmis.nomAuteur}}</p>
+    </div>
+    <div class="article column3">
+      <img src="{{assignmentTransmis.imgProf}}" alt="" srcset="">
+    </div>
+  </div>
+  <div id="footer">
+    <p>Remarque:</p>
+    <p style="text-align: left;"> {{assignmentTransmis.remarque}}</p>
+
+  </div>
+
+  
+  <nav>
+    <a routerLink="/assignment/{{assignmentTransmis.id}}/edit">
+      <button mat-raised-button color="primary">
+        EDIT
+      </button>
+    </a>
+  </nav>
+
+  
+
+  <button mat-raised-button color="warn" (click)="onDeleteAssignment()">
+    DELETE
+  </button>
+
+  <mat-checkbox *ngIf="!assignmentTransmis.rendu" [checked]="assignmentTransmis.rendu" (click)="onAssignmentRendu()">
+    Devoir rendu
+  </mat-checkbox>
+
+</div>
+

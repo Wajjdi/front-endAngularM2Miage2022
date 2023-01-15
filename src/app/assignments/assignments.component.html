@@ -1,53 +1,210 @@
-<h2>{{titre}}</h2>
 
-<main >
-  <a routerLink="/add">
-    <button mat-flat-button color="accent"
-    >
-          Ajouter Assignment
+<mat-toolbar color="primary">
+  <button mat-icon-button class="example-icon" aria-label="Example icon-button with menu icon" routerLink="/home">
+    <mat-icon>menu</mat-icon>
+  </button>
+  <span routerLink="/home">{{title}}</span>
+  <span class="example-spacer"></span>
+  <button *ngIf="!etat"  mat-raised-button color="primary" routerLink="/login">
+    se connecter
+  </button>
+  <button *ngIf="etat"  mat-raised-button color="primary" routerLink="/home"  (click)="login()">
+    se deconnecter
+  </button>
+</mat-toolbar>
+<h2 class="title">{{titre}}</h2>
+
+
+<main>
+  <form class="example-form">
+    <mat-form-field class="example-full-width">
+      <mat-label>Search</mat-label>
+      <input matInput  (keyup)="transform($event)">
+    </mat-form-field>
+  </form>
+
+    <button mat-flat-button color="primary" [disabled]="!etat" routerLink="/add"  >
+     Ajouter un assignment
     </button>
-</a>
-  <mat-list *ngFor="let a of assignments">
-    <nav>
-    <a routerLink="/assignment/{{a.id}}">
-      <mat-list-item>
-        <h3 mat-line>{{a.nom}}</h3>
-        <p mat-line>{{a.dateDeRendu | date}}</p>
-        <mat-icon mat-list-icon *ngIf="a.rendu">done</mat-icon>
-      </mat-list-item>
-    <h3 mat-subheader>{{a.dateDeRendu | date}}</h3>
-    <mat-list-item [ngClass]="{'rendu':a.rendu, 'nonRendu':!a.rendu}"
-                   (click)="assignmentClique(a)"
-    >
-
-      <p *ngIf="a.rendu; else nonsoumis">
-        {{a.nom}} a été rendu.
-      </p>
-      <ng-template #nonsoumis>
-        <p>
-          {{a.nom}} n'a pas été rendu à temps.
-        </p>
-      </ng-template>
-      <mat-divider></mat-divider>
-    </mat-list-item>
-    </a>
-    </nav>
-    <h3> {{a.nomMatiere}}  ouiiiii </h3>
-    <h3> {{a.imgProf}}   {{a.imgMatiere}}  ouiiiii super </h3>
-    <div>
-     
-      <img src="../../assets/grigri.png" alt="Logo de MDN">
-
-      <img src= {{a.imgProf}} alt="Logo de MDN">
-
-      <img src= {{a.imgMatiere}} alt="Logo de MDN">
-
-      <p>  {{a.remarque}} </p>
-      <p>  {{a.note}} </p>
-    </div>
+    <button mat-flat-button class="hide" color="primary" (click)="hideData()">Hide Data</button>
+<!--
+  <div>
    
+    <table>
+      <thead>
+        <tr>
+          <th>ID</th>
+          <th>Name</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let a of pageSlice | search: searchText ">
+          <td>{{a.id}}</td>
+          <td>{{a.nom}}</td>
+        </tr>
 
+      </tbody>
+    </table>
+  </div>
+-->
+
+
+
+  <div>
+    <table mat-table [dataSource]="dataSource" class="mat-elevation-z8 demo-table" matSort (matSortChange)="announceSortChange($event)">
+
+      <!--- Note that these columns can be defined in any order.
+          The actual rendered columns are set as a property on the row definition" -->
+
+      <!-- Position Column -->
+      <ng-container matColumnDef="id">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by number"> Id </th>
+        <td mat-cell *matCellDef="let element">
+          <div *ngIf="!hide || element.rendu !== false ">{{element.id}}</div>
+        </td>
+      </ng-container>
+
+      <!-- Name Column -->
+      <ng-container matColumnDef="nom">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header sortActionDescription="Sort by number"> Nom </th>
+        <td mat-cell *matCellDef="let element">
+          <div *ngIf="!hide || element.rendu !== false "> {{element.nom}} </div>
+        </td>
+      </ng-container>
+
+      <!-- Weight Column -->
+      <ng-container matColumnDef="dateDeRendu">
+        <th mat-header-cell *matHeaderCellDef mat-sort-header > Date de Rendu </th>
+        <td mat-cell *matCellDef="let element">
+          <div *ngIf="!hide || element.rendu !== false">{{element.dateDeRendu | date}}</div>
+        </td>
+      </ng-container>
+
+      <!-- Symbol Column -->
+      <ng-container matColumnDef="rendu">
+        <th mat-header-cell *matHeaderCellDef> Rendu </th>
+        <td mat-cell *matCellDef="let element">
+          <div *ngIf="!hide || element.rendu !== false">{{element.rendu}}</div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="nomAuteur">
+        <th mat-header-cell *matHeaderCellDef> nom Auteur </th>
+        <td mat-cell *matCellDef="let element">
+          <div *ngIf="!hide || element.rendu !== false">{{element.nomAuteur}}</div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="nomMatiere">
+        <th mat-header-cell *matHeaderCellDef> Nom matiere </th>
+        <td mat-cell *matCellDef="let element">
+          <div *ngIf="!hide || element.rendu !== false">{{element.nomMatiere}}</div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="note">
+        <th mat-header-cell *matHeaderCellDef> Note </th>
+        <td mat-cell *matCellDef="let element">
+          <div *ngIf="!hide || element.rendu !== false">{{element.note}}</div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="remarque">
+        <th mat-header-cell *matHeaderCellDef> Remarque </th>
+        <td mat-cell *matCellDef="let element" width="250">
+          <div *ngIf="!hide || element.rendu !== false">{{element.remarque}}</div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="imgProf">
+        <th mat-header-cell *matHeaderCellDef> Prof </th>
+        <td mat-cell *matCellDef="let element">
+          <div *ngIf="!hide || element.rendu !== false"><img src={{element.imgProf}} width="200" height="100"></div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="imgMatiere">
+        <th mat-header-cell *matHeaderCellDef> Matiere </th>
+        <td mat-cell *matCellDef="let element">
+          <div *ngIf="!hide || element.rendu !== false"><img src={{element.imgMatiere}} width="200" height="100"></div>
+        </td>
+      </ng-container>
+
+      <ng-container matColumnDef="edit" >
+        <div *ngIf="etat">
+        <th mat-header-cell *matHeaderCellDef> edit </th>
+        <td mat-cell *matCellDef="let element">
+          <div *ngIf="!hide || element.rendu !== false"> <button routerLink="/assignment/{{element.id}}" mat-icon-button
+              aria-label="Example icon button with a vertical three dot icon">
+              <mat-icon>more_vert</mat-icon>
+            </button></div>
+        </td>
+      </div>
+
+      <div *ngIf="!etat">
+        <th mat-header-cell *matHeaderCellDef> edit </th>
+        <td mat-cell *matCellDef="let element">
+          <div *ngIf="!hide || element.rendu !== false"> <button  [disabled]="true" routerLink="/assignment/{{element.id}}" mat-icon-button
+              aria-label="Example icon button with a vertical three dot icon">
+              <mat-icon>more_vert</mat-icon>
+            </button></div>
+        </td>
+      </div>
+      </ng-container>
+
+
+      
+      <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+    </table>
+    <mat-paginator [length]="this.assignments.length" [pageSize]="10" [pageSizeOptions]="[10,15,20]"
+      (page)="OnPageChange($event)">
+
+    </mat-paginator>
+  </div>
+
+  <!--
+  <mat-list *ngFor="let a of assignments">
+   
+    <div *ngIf="hide || a.rendu !== false">
+      <nav>
+        <a routerLink="/assignment/{{a.id}}">
+          <mat-list-item>
+            <h3 mat-line>{{a.nom}}</h3>
+            <p mat-line>{{a.dateDeRendu | date}}</p>
+            <mat-icon mat-list-icon *ngIf="a.rendu">done</mat-icon>
+          </mat-list-item>
+          <h3 mat-subheader>{{a.dateDeRendu | date}}</h3>
+          <mat-list-item [ngClass]="{'rendu':a.rendu, 'nonRendu':!a.rendu}" (click)="assignmentClique(a)">
+            <p *ngIf="a.rendu; else nonsoumis">
+              {{a.nom}} a été rendu.
+            </p>
+            <ng-template #nonsoumis>
+              <p>
+                {{a.nom}} n'a pas été rendu à temps.
+              </p>
+            </ng-template>
+            <mat-divider></mat-divider>
+          </mat-list-item>
+        </a>
+      </nav>
+      <h3> {{a.nomMatiere}} ouiiiii </h3>
+      <h3> {{a.imgProf}} {{a.imgMatiere}} ouiiiii super </h3>
+      <div>
+
+        <img src="../../assets/grigri.png" alt="Logo de MDN">
+
+        <img src={{a.imgProf}} alt="Logo de MDN">
+
+        <img src={{a.imgMatiere}} alt="Logo de MDN">
+
+        <p> {{a.remarque}} </p>
+        <p> {{a.note}} </p>
+        <p> {{a.nomMatiere}} </p>
+      </div>
+
+    </div>
   </mat-list>
-
+-->
 
 </main>
